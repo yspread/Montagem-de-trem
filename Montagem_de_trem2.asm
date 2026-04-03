@@ -14,6 +14,8 @@ mens_nao_encontrado:
 	.asciz "Erro: Vagão com este ID não encontrado!\n"
 mens_remocao_primeiro:
 	.asciz "Erro: Não é possível remover a locomotiva\n"
+mens_erro_menu:
+	.asciz "Comando inválido!\n"
 
 #Definição e inicialização da locomotiva
 locomotiva:
@@ -62,7 +64,10 @@ loop_menu:
 	beq t0,t1,com6
 	
 	
-	# Se não foi selecionado nenhum comando, imprime o menu novamente
+	# Se não foi selecionado um comando inválido, avisa o erro e imprime o menu novamente
+	addi a7,zero,4
+	la a0,mens_erro_menu
+	ecall
 	j loop_menu
 	
 # Definição dos comandos
@@ -87,7 +92,8 @@ com6:
 
 
 # Definição dos Procedimentos
-adicionar_inicio:
+
+adicionar_inicio: #Funcionalidade 1
 	# Alocando memória para o vagão (12bytes)
 	addi a7,zero,9
 	add a0,zero,12
@@ -117,15 +123,15 @@ adicionar_inicio:
 	# Retornando do procedimentop
 	jr ra
 	
-adicionar_fim:
+adicionar_fim: #Funcionalidade 2
 	la t0, locomotiva # obtendo o endereço da locomotiva e colocando em t0
 
 encontrar_fim:
 	lw t1, 8(t0)          # obtendo o endereço que o ponteiro do t0 apontava anteriormente e colocando em t1
-	beq t1,zero,Adicionar # se t1=0, t0 é o último vagão
+	beq t1,zero,adicionar # se t1=0, t0 é o último vagão
 	mv t0, t1             # senão, continua a percorrer a lista
 
-	j percorrer_lista
+	j encontrar_fim
 
 adicionar:
 	# Alocando memória para o vagão (12bytes)
@@ -153,8 +159,8 @@ adicionar:
 
 	# Retornando do procedimento
 	jr ra
-	
-remover_vagao_id:
+	 
+remover_vagao_id: # Funcionalidade 3
 	la t0, locomotiva # obtendo o endereço da locomotiva e colocando em t0
 	# Solicitação do id
 	addi a7,zero,4
@@ -198,8 +204,25 @@ primeiro_vagao:
 	# Retornando do procedimento
     jr ra
 
-listar_trem:
-	
+listar_trem: # Funcionalidade 4
+	la t0, locomotiva # pegando o endereço da locomotiva
+	lw t1, 8(t0) # pegando o valor que a locomotiva aponta (primeiro vagão)
 
-buscar_vagao:
+percorrer_e_printar:
+	lw t2, 0(t1) # salvo o id do vagão
+	addi a7,zero,1 # imprimo o ID do vagão
+	la a0, t2
+	ecall
+	lw t2, 4(t1) # imprimo o tipo do vagão
+	addi a7,zero,1
+	la a0, t2
+	ecall
+	lw t1, 8(t1) # salvo o endereço do próximo vagão
+	bne t1, zero, percorrer_e_printar # se não for o fim do trem, eu repito o processo para o próximo vagão
+
+	# Retornando do procedimento
+	jr ra
+
+buscar_vagao: # Funcionalidade 5
+	
 	
