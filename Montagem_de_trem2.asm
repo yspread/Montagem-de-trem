@@ -15,7 +15,13 @@ mens_nao_encontrado:
 mens_remocao_primeiro:
 	.asciz "Erro: Não é possível remover a locomotiva\n"
 mens_erro_menu:
-	.asciz "Comando inválido!\n"
+	.asciz "Erro: Comando inválido!\n"
+mens_vagao_encontrado:
+	.asciz "O vagão com o ID procurado existe\n"
+print_id:
+	.asciz "\nID: "
+print_tipo:
+	.asciz "\nTipo do Vag�o: "
 
 #Definição e inicialização da locomotiva
 locomotiva:
@@ -91,12 +97,14 @@ com6:
 	ecall
 
 
+
 # Definição dos Procedimentos
 
-adicionar_inicio: #Funcionalidade 1
+# FUNCIONALIDADE 1
+adicionar_inicio:
 	# Alocando memória para o vagão (12bytes)
 	addi a7,zero,9
-	add a0,zero,12
+	addi a0,zero,12
 	ecall
 	mv t2,a0
 	# Solicitação do id e tipo do vagão
@@ -123,7 +131,10 @@ adicionar_inicio: #Funcionalidade 1
 	# Retornando do procedimentop
 	jr ra
 	
-adicionar_fim: #Funcionalidade 2
+
+
+# FUNCIONALIDADE 2
+adicionar_fim:
 	la t0, locomotiva # obtendo o endereço da locomotiva e colocando em t0
 
 encontrar_fim:
@@ -136,7 +147,7 @@ encontrar_fim:
 adicionar:
 	# Alocando memória para o vagão (12bytes)
 	addi a7,zero,9
-	add a0,zero,12
+	addi a0,zero,12
 	ecall
 	mv t2,a0
 	# Solicitação do id e tipo do vagão
@@ -160,7 +171,10 @@ adicionar:
 	# Retornando do procedimento
 	jr ra
 	 
-remover_vagao_id: # Funcionalidade 3
+
+
+# FUNCIONALIDADE 3
+remover_vagao_id:
 	la t0, locomotiva # obtendo o endereço da locomotiva e colocando em t0
 	# Solicitação do id
 	addi a7,zero,4
@@ -204,18 +218,30 @@ primeiro_vagao:
 	# Retornando do procedimento
     jr ra
 
-listar_trem: # Funcionalidade 4
+
+
+# FUNCIONALIDADE 4
+listar_trem:
 	la t0, locomotiva # pegando o endereço da locomotiva
 	lw t1, 8(t0) # pegando o valor que a locomotiva aponta (primeiro vagão)
 
 percorrer_e_printar:
 	lw t2, 0(t1) # salvo o id do vagão
-	addi a7,zero,1 # imprimo o ID do vagão
-	la a0, t2
+	addi a7, zero, 4
+	la, a0, print_id
 	ecall
-	lw t2, 4(t1) # imprimo o tipo do vagão
-	addi a7,zero,1
-	la a0, t2
+	addi a7,zero,1 # imprimo o ID do vagão
+	mv a0, t2
+	ecall
+	addi a7, zero, 4
+	la, a0, print_tipo
+	ecall
+	lw t2, 4(t1) # salvo o tipo do vagão
+	addi a7,zero,1	# imprimo o tipo do vagão
+	mv a0, t2
+	ecall
+	addi, a7, zero, 11 # imprimo uma quebra de linha
+	li a0, 10 # salvo o valor ASCII de \n no registrador 
 	ecall
 	lw t1, 8(t1) # salvo o endereço do próximo vagão
 	bne t1, zero, percorrer_e_printar # se não for o fim do trem, eu repito o processo para o próximo vagão
@@ -223,6 +249,35 @@ percorrer_e_printar:
 	# Retornando do procedimento
 	jr ra
 
-buscar_vagao: # Funcionalidade 5
-	
-	
+
+
+# FUNCIONALIDADE 5
+buscar_vagao:
+	addi a7,zero,4 # peço pro usuário que digite o ID a ser buscado
+	la a0,mens_id
+	ecall
+	addi a7,zero,5	#leitura do input do usuário (ID do vagão procurado)
+	ecall
+	mv t0, a0 # armazeno o ID a ser buscado em t0
+	la t1, locomotiva # pegando o endereço da locomotiva
+	lw t2, 8(t1) # pegando a posição do primeiro vagão
+
+percorrer_trem:
+	lw t3, 0(t2) # pego o id do vagão
+	beq t3, t0, id_encontrado # se os IDs são correspondentes, saio do loop
+	lw t2, 8(t2) # caso não, passo pro próximo vagão
+	bne t2, zero, percorrer_trem # enquanto não acabar o trem e o ID não for encontrado, continuo o loop
+	addi a7, zero, 4
+	la a0, mens_nao_encontrado # nesse caso, chegamos no fim do trem e o ID não foi encontrado
+	ecall
+
+	# Retornando do procedimento
+	jr ra
+
+id_encontrado:
+	addi a7, zero, 4
+	la a0, mens_vagao_encontrado #o vagão foi encontrado e relatamos isso ao usuário
+	ecall
+
+	#Retornando do procedimento
+	jr ra
