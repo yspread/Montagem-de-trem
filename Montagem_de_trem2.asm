@@ -16,11 +16,13 @@ mens_remocao_primeiro:
 	.asciz "Erro: N√£o √© poss√≠vel remover a locomotiva\n"
 mens_erro_menu:
 	.asciz "Erro: Comando inv√°lido!\n"
+mens_erro_tipo:
+	.asciz "Erro: Tipo inv√°lido|!\n"
 mens_vagao_encontrado:
 	.asciz "O vag√£o com o ID procurado existe\n"
-print_id:
+mens_print_id:
 	.asciz "\nID: "
-print_tipo:
+mens_print_tipo:
 	.asciz "\nTipo do Vag„o: "
 
 #Defini√ß√£o e inicializa√ß√£o da locomotiva
@@ -115,12 +117,18 @@ adicionar_inicio:
 	ecall
 	mv t3, a0
 	sw t3,0(t2) # inicializando o id do vag√£o
+ler_tipo_1:
 	addi a7,zero,4
 	la a0,mens_tipo
 	ecall
 	addi a7,zero,5
 	ecall
-	mv t4, a0
+	addi t4, zero, 4 # valor m·ximo para o tipo do vag„o
+	bgt a0, t4, tipo_invalido_1  # se o tipo inserido for maior que o valor m·ximo, tratamos o erro
+	addi t4, zero, 1 # o tipo 1 corresponde a locomotiva, n„o È possÌvel adicionar outras locomotivas no trem
+	ble a0, t4, tipo_invalido_1
+	
+	mv t4, a0 # se o tipo for v·lido, prosseguimos
 	sw t4,4(t2) # inicializando o tipo do vag√£o
 	# Reorganiza√ß√£o dos ponteiros
 	la t0, locomotiva #obtendo o endere√ßo da locomotiva e colocando em t0
@@ -131,6 +139,12 @@ adicionar_inicio:
 	# Retornando do procedimentop
 	jr ra
 	
+tipo_invalido_1: 
+	addi a7,zero,4 # caso o tipo do vag„o inserido seja inv·lido, avisamos e pedimos novamente que um tipo seja inserido, atÈ ser um tipo v·lido
+	la a0,mens_erro_tipo
+	ecall
+	
+	j ler_tipo_1 # pede novamente que se insira o tipo do vag„o
 
 
 # FUNCIONALIDADE 2
@@ -158,11 +172,18 @@ adicionar:
 	ecall
 	mv t3, a0
 	sw t3,0(t2) # inicializando o id do vag√£o
+ler_tipo_2:
 	addi a7,zero,4
 	la a0,mens_tipo
 	ecall
 	addi a7,zero,5
 	ecall
+	# aqui È feita a verificaÁ„o de se o tipo inserido È valido ou n„o, igual na funcionalidade 1
+	addi t4, zero, 4 
+	bgt a0, t4, tipo_invalido_2
+	addi t4, zero, 1 
+	ble a0, t4, tipo_invalido_2
+	# caso o tipo seja v·lido, prosseguimos
 	mv t4, a0
 	sw t4,4(t2)    # inicializando o tipo do vag√£o
 	sw zero, 8(t2) # novo vag√£o aponta para 0
@@ -170,8 +191,12 @@ adicionar:
 
 	# Retornando do procedimento
 	jr ra
-	 
-
+tipo_invalido_2:
+	addi a7,zero,4 # caso o tipo do vag„o inserido seja inv·lido, avisamos e pedimos novamente que um tipo seja inserido, atÈ ser um tipo v·lido
+	la a0,mens_erro_tipo
+	ecall
+	
+	j ler_tipo_2 # pedimos o tipo novamente
 
 # FUNCIONALIDADE 3
 remover_vagao_id:
@@ -228,13 +253,13 @@ listar_trem:
 percorrer_e_printar:
 	lw t2, 0(t1) # salvo o id do vag√£o
 	addi a7, zero, 4
-	la, a0, print_id
+	la, a0, mens_print_id
 	ecall
 	addi a7,zero,1 # imprimo o ID do vag√£o
 	mv a0, t2
 	ecall
 	addi a7, zero, 4
-	la, a0, print_tipo
+	la, a0, mens_print_tipo
 	ecall
 	lw t2, 4(t1) # salvo o tipo do vag√£o
 	addi a7,zero,1	# imprimo o tipo do vag√£o
