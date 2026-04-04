@@ -250,7 +250,6 @@ percorrer_e_printar:
 	jr ra
 
 
-
 # FUNCIONALIDADE 5
 buscar_vagao:
 	addi a7,zero,4 # peço pro usuário que digite o ID a ser buscado
