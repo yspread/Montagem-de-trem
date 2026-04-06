@@ -1,13 +1,12 @@
 # Segmento de dados
 	.data
 	.align 0
-mens: 	.asciz "Bem vindo ao jogo Montagem de Trem!\n"
-	.align 0
-menu:	.asciz "Selecione um dos comandos para jogar:\n1. Adicionar no início\n2. Adicionar no final\n3. Remover por ID\n4. Listar\n5. Buscar\n6. Sair\nEscolha Atual: "
-	.align 0
+mens_inicial: 	
+	.asciz "Bem vindo ao jogo Montagem de Trem!\n"
+menu:	
+	.asciz "\nSelecione um dos comandos para jogar:\n1. Adicionar no início\n2. Adicionar no final\n3. Remover por ID\n4. Listar\n5. Buscar\n6. Sair\nEscolha Atual: "
 mens_id:
 	.asciz "Digite o ID do vagão: "
-	.align 0
 mens_tipo:
 	.asciz "Digite o tipo do vagão:\n(2) Carga\n(3) Passageiro\n(4) Combustível\nEscolha Atual: "
 mens_nao_encontrado: 
@@ -28,12 +27,10 @@ mens_print_tipo:
 	.asciz "\nTipo do Vagão: "
 
 #Definição e inicialização da locomotiva
+	.align 2
 locomotiva:
-	.align 2
 	.word 0 											#id zero
-	.align 2
 	.word 1 											#tipo 1 = locomotiva
-	.align 2
 	.word 0 											#ponteiro para o próximo inicialmente "zerado"
 
 # Segmento de texto
@@ -45,7 +42,7 @@ locomotiva:
 main:	
 	# Impressão a mensagem de boas vindas
 	addi a7,zero,4
-	la a0,mens
+	la a0,mens_inicial
 	ecall
 	
 # Loop para impressão do menu e escolha do comando
