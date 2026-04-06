@@ -3,9 +3,7 @@ Trabalho 1 para a disciplina de Organização e Arquitetura de Computadores, com
 
 ### Integrantes do grupo
 Rafael Pavon Diesner - 16898096
-
 Gustavo de Faria Fernandes - 16871221
-
 Giovanni Torres Bullo - 16869833
 
 # Introdução e objetivos
