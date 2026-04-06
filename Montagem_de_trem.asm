@@ -3,38 +3,38 @@
 	.align 0
 mens: 	.asciz "Bem vindo ao jogo Montagem de Trem!\n"
 	.align 0
-menu:	.asciz "Selecione um dos comandos para jogar:\n1. Adicionar no inÌcio\n2. Adicionar no final\n3. Remover por ID\n4. Listar\n5. Buscar\n6. Sair\nEscolha Atual: "
+menu:	.asciz "Selecione um dos comandos para jogar:\n1. Adicionar no in√≠cio\n2. Adicionar no final\n3. Remover por ID\n4. Listar\n5. Buscar\n6. Sair\nEscolha Atual: "
 	.align 0
 mens_id:
-	.asciz "Digite o ID do vag„o: "
+	.asciz "Digite o ID do vag√£o: "
 	.align 0
 mens_tipo:
-	.asciz "Digite o tipo do vag„o:\n(2) Carga\n(3) Passageiro\n(4) CombustÌvel\nEscolha Atual: "
+	.asciz "Digite o tipo do vag√£o:\n(2) Carga\n(3) Passageiro\n(4) Combust√≠vel\nEscolha Atual: "
 mens_nao_encontrado: 
-	.asciz "Erro: Vag„o com este ID n„o encontrado!\n"
+	.asciz "Erro: Vag√£o com este ID n√£o encontrado!\n"
 mens_remocao_primeiro:
-	.asciz "Erro: N„o È possÌvel remover a locomotiva\n"
+	.asciz "Erro: N√£o √© poss√≠vel remover a locomotiva\n"
 mens_id_repetido:
-	.asciz "Erro: J· existe vag„o com o ID informado, digite outro valor!\n"
+	.asciz "Erro: J√° existe vag√£o com o ID informado, digite outro valor!\n"
 mens_erro_menu:
-	.asciz "Erro: Comando inv·lido!\n"
+	.asciz "Erro: Comando inv√°lido!\n"
 mens_erro_tipo:
-	.asciz "Erro: Tipo inv·lido|!\n"
+	.asciz "Erro: Tipo inv√°lido|!\n"
 mens_vagao_encontrado:
-	.asciz "O vag„o com o ID procurado existe\n"
+	.asciz "O vag√£o com o ID procurado existe\n"
 mens_print_id:
 	.asciz "\nID: "
 mens_print_tipo:
-	.asciz "\nTipo do Vag„o: "
+	.asciz "\nTipo do Vag√£o: "
 
-#DefiniÁ„o e inicializaÁ„o da locomotiva
+#Defini√ß√£o e inicializa√ß√£o da locomotiva
 locomotiva:
 	.align 2
-	.word 0 		#id zero
+	.word 0 											#id zero
 	.align 2
-	.word 1 		#tipo 1 = locomotiva
+	.word 1 											#tipo 1 = locomotiva
 	.align 2
-	.word 0 		#ponteiro para o prÛximo inicialmente "zerado"
+	.word 0 											#ponteiro para o pr√≥ximo inicialmente "zerado"
 
 # Segmento de texto
 	.text
@@ -43,14 +43,14 @@ locomotiva:
 
 # Programa principal
 main:	
-	# Impress„o a mensagem de boas vindas
+	# Impress√£o a mensagem de boas vindas
 	addi a7,zero,4
 	la a0,mens
 	ecall
 	
-# Loop para impress„o do menu e escolha do comando
+# Loop para impress√£o do menu e escolha do comando
 loop_menu: 
-	# Impress„o do menu
+	# Impress√£o do menu
 	addi a7,zero,4
 	la a0,menu
 	ecall
@@ -74,13 +74,13 @@ loop_menu:
 	beq t0,t1,com6
 	
 	
-	# Se foi selecionado um comando inv·lido, avisa o erro e imprime o menu novamente
+	# Se foi selecionado um comando inv√°lido, avisa o erro e imprime o menu novamente
 	addi a7,zero,4
 	la a0,mens_erro_menu
 	ecall
 	j loop_menu
 	
-# DefiniÁ„o dos comandos
+# Defini√ß√£o dos comandos
 com1:
 	jal adicionar_inicio
 	j loop_menu
@@ -97,124 +97,124 @@ com5:
 	jal buscar_vagao
 	j loop_menu
 com6:
-	addi a7,zero,10		# SaÌda do programa
+	addi a7,zero,10										# Sa√≠da do programa
 	ecall
 
 
 
-# DefiniÁ„o dos Procedimentos
+# Defini√ß√£o dos Procedimentos
 
-# FUNCIONALIDADE 1 -> Adiciona um vag„o no ÌnÌcio do trem, logo apÛs a locomotiva
+# FUNCIONALIDADE 1 -> Adiciona um vag√£o no √≠n√≠cio do trem, logo ap√≥s a locomotiva
 adicionar_inicio:
-	# Alocando memÛria para o vag„o (12bytes)
+	# Alocando mem√≥ria para o vag√£o (12bytes)
 	addi a7,zero,9
 	addi a0,zero,12
 	ecall
-	mv t2,a0 		# endereÁo de memÛria alocado para o novo vag„o salvo em t2
-ler_id_1: 			# solitaÁ„o para que o usu·rio insira o ID do novo vag„o
+	mv t2,a0 											# endere√ßo de mem√≥ria alocado para o novo vag√£o salvo em t2
+ler_id_1: 												# solita√ß√£o para que o usu√°rio insira o ID do novo vag√£o
 	addi a7,zero,4
 	la a0,mens_id
 	ecall
 	addi a7,zero,5
 	ecall
 	mv t3, a0
-	la t4, locomotiva			# endereÁo da locomotiva salvo em t4
-procura_id_repetido:				# loop para verificar se o ID È novo ou se j· existe um vag„o com esse ID. Caso exista, o ID È inv·lido e portanto deve ser inserido um novo ID
-	lw t5, 0(t4) 				# salvo o id do vag„o atual em t5
-	beq t3, t5, id_repetido_1 		# se o id inserido for igual ao do vag„o j· existente, o id È invalido
-	lw t4, 8(t4) 				# salvo o endereÁo pro prÛximo vag„o
-	bne t4, zero, procura_id_repetido 	# se n„o chegou no ultimo vag„o ainda e o id ainda n„o foi repetido, continuamos o loop ate o fim do trem ou ate achar um id repetido
-	sw t3,0(t2) 				# inicializando o id do vag„o, caso o id n„o seja repetido
+	la t4, locomotiva									# endere√ßo da locomotiva salvo em t4
+procura_id_repetido:									# loop para verificar se o ID √© novo ou se j√° existe um vag√£o com esse ID. Caso exista, o ID √© inv√°lido e portanto deve ser inserido um novo ID
+	lw t5, 0(t4) 										# salvo o id do vag√£o atual em t5
+	beq t3, t5, id_repetido_1 							# se o id inserido for igual ao do vag√£o j√° existente, o id √© invalido
+	lw t4, 8(t4) 										# salvo o endere√ßo pro pr√≥ximo vag√£o
+	bne t4, zero, procura_id_repetido 					# se n√£o chegou no ultimo vag√£o ainda e o id ainda n√£o foi repetido, continuamos o loop ate o fim do trem ou ate achar um id repetido
+	sw t3,0(t2) 										# inicializando o id do vag√£o, caso o id n√£o seja repetido
 ler_tipo_1:
-	addi a7,zero,4				# solicitaÁ„o para que o usu·rio insira o tipo do novo vag„o
+	addi a7,zero,4										# solicita√ß√£o para que o usu√°rio insira o tipo do novo vag√£o
 	la a0,mens_tipo
 	ecall
 	addi a7,zero,5
 	ecall
-	addi t4, zero, 4 			# o valor correspondente ao tipo do vag„o inserido deve ser 2, 3 ou 4
-	bgt a0, t4, tipo_invalido_1  		# se o tipo inserido for maior que o valor m·ximo, tratamos o erro
-	addi t4, zero, 1 			# o tipo 1 corresponde a locomotiva, n„o È possÌvel adicionar outras locomotivas no trem
+	addi t4, zero, 4 									# o valor correspondente ao tipo do vag√£o inserido deve ser 2, 3 ou 4
+	bgt a0, t4, tipo_invalido_1  						# se o tipo inserido for maior que o valor m√°ximo, tratamos o erro
+	addi t4, zero, 1 									# o tipo 1 corresponde a locomotiva, n√£o √© poss√≠vel adicionar outras locomotivas no trem
 	ble a0, t4, tipo_invalido_1
-	mv t4, a0 				# se o tipo for v·lido, prosseguimos
-	sw t4,4(t2) 				# inicializando o tipo do vag„o
-	# ReorganizaÁ„o dos ponteiros
-	la t0, locomotiva 			#obtendo o endereÁo da locomotiva e colocando em t0
-	lw t1, 8(t0) 				#obtendo o endereÁo que o ponteiro da locomotiva apontava anteriormente e colocando em t1
-	sw t2, 8(t0) 				#colocando o endereÁo do novo vag„o(t2) no ponteiro da locomotiva
-	sw t1, 8(t2) 				#inicializando o ponteiro do vag„o
+	mv t4, a0 											# se o tipo for v√°lido, prosseguimos
+	sw t4,4(t2) 										# inicializando o tipo do vag√£o
+	# Reorganiza√ß√£o dos ponteiros
+	la t0, locomotiva 									# obtendo o endere√ßo da locomotiva e colocando em t0
+	lw t1, 8(t0) 										# obtendo o endere√ßo que o ponteiro da locomotiva apontava anteriormente e colocando em t1
+	sw t2, 8(t0) 										# colocando o endere√ßo do novo vag√£o(t2) no ponteiro da locomotiva
+	sw t1, 8(t2) 										# inicializando o ponteiro do vag√£o
 	
 	# Retornando do procedimento
 	jr ra
 	
 id_repetido_1:
 	addi a7, zero, 4
-	la a0, mens_id_repetido 		# caso o id j· exista na lista, o usu·rio È informado do erro e È pedido um novo id
+	la a0, mens_id_repetido 							# caso o id j√° exista na lista, o usu√°rio √© informado do erro e √© pedido um novo id
 	ecall
 	
 	j ler_id_1
 	
 tipo_invalido_1: 
-	addi a7,zero,4 				# caso o tipo do vag„o inserido seja inv·lido, avisamos e pedimos novamente que um tipo seja inserido, atÈ ser um tipo v·lido
+	addi a7,zero,4 										# caso o tipo do vag√£o inserido seja inv√°lido, avisamos e pedimos novamente que um tipo seja inserido, at√© ser um tipo v√°lido
 	la a0,mens_erro_tipo
 	ecall
 	
 	j ler_tipo_1 
 
 
-# FUNCIONALIDADE 2 -> Adiciona um vag„o ao final do trem
+# FUNCIONALIDADE 2 -> Adiciona um vag√£o ao final do trem
 adicionar_fim:
-	# Alocando memÛria para o vag„o (12bytes)
+	# Alocando mem√≥ria para o vag√£o (12bytes)
 	addi a7,zero,9
 	addi a0,zero,12
 	ecall
-	mv t1,a0 				# guardo o endereÁo alocado em t1
-ler_id_2:					# SolicitaÁ„o do id do vag„o
+	mv t1,a0 										# guardo o endere√ßo alocado em t1
+ler_id_2:											# Solicita√ß√£o do id do vag√£o
 	addi a7,zero,4
 	la a0,mens_id
 	ecall
 	addi a7,zero,5
 	ecall
-	mv t2, a0  				# em t2 fica salvo o id do vag„o a ser inserido
-	la t0, locomotiva 			# obtendo o endereÁo da locomotiva e colocando em t0
-encontrar_fim:		      			# loop para chegar no fim do trem onde ser· adicionado o novo vag„o, o loop tambÈm serve para verificar se o ID digitado pelo usu·rio È repetido (inv·lido) ou n„o
-	lw t3, 0(t0)          			# obtendo o valor do id do vag„o atual e salvando em t3
-	beq t2, t3, id_invalido_2 		# se o id inserido È igual ao t3, pedimos por um novo id
-	lw t5, 8(t0)             		# devemos salvar o endereÁo do vag„o pois ele ser· necess·rio caso seja o ˙ltimo
-	beq t5, zero, continua_insercao 	# se o proximo vag„o for nulo, È por que chegamos no final sem encontrar id repetido, ent„o podemos prosseguir com a inserÁ„o
-	mv t0, t5  	 			# caso o vag„o atual n„o seja o ˙ltimo, passamos o endereÁo dele para o t0 para continuar o loop da forma correta
+	mv t2, a0  										# em t2 fica salvo o id do vag√£o a ser inserido
+	la t0, locomotiva 								# obtendo o endere√ßo da locomotiva e colocando em t0
+encontrar_fim:		      							# loop para chegar no fim do trem onde ser√° adicionado o novo vag√£o, o loop tamb√©m serve para verificar se o ID digitado pelo usu√°rio √© repetido (inv√°lido) ou n√£o
+	lw t3, 0(t0)          							# obtendo o valor do id do vag√£o atual e salvando em t3
+	beq t2, t3, id_invalido_2 						# se o id inserido √© igual ao t3, pedimos por um novo id
+	lw t5, 8(t0)             						# devemos salvar o endere√ßo do vag√£o pois ele ser√° necess√°rio caso seja o √∫ltimo
+	beq t5, zero, continua_insercao 				# se o proximo vag√£o for nulo, √© por que chegamos no final sem encontrar id repetido, ent√£o podemos prosseguir com a inser√ß√£o
+	mv t0, t5  	 									# caso o vag√£o atual n√£o seja o √∫ltimo, passamos o endere√ßo dele para o t0 para continuar o loop da forma correta
 	j encontrar_fim
-	# continuando a inserÁ„o, apÛs ser encontrado o final do trem
+	# continuando a inser√ß√£o, ap√≥s ser encontrado o final do trem
 continua_insercao:
-	sw t2,0(t1) 				# inicializando o id do vag„o
-ler_tipo_2: 					# SolicitaÁ„o do tipo do vag„o
+	sw t2,0(t1) 									# inicializando o id do vag√£o
+ler_tipo_2: 										# Solicita√ß√£o do tipo do vag√£o
 	addi a7,zero,4
 	la a0,mens_tipo
 	ecall
 	addi a7,zero,5
 	ecall
-	# aqui È feita a verificaÁ„o de se o tipo inserido È valido ou n„o, igual na funcionalidade 1
+	# aqui √© feita a verifica√ß√£o de se o tipo inserido √© valido ou n√£o, igual na funcionalidade 1
 	addi t3, zero, 4 
 	bgt a0, t3, tipo_invalido_2
 	addi t3, zero, 1 
 	ble a0, t3, tipo_invalido_2
-	# caso o tipo seja v·lido, prosseguimos
+	# caso o tipo seja v√°lido, prosseguimos
 	mv t4, a0
-	sw t4,4(t1)    				# inicializando o tipo do vag„o
-	sw zero, 8(t1) 				# novo vag„o aponta para 0
-	sw t1, 8(t0)   				# colocando o endereÁo do novo vag„o(t2) no ponteiro do antigo ˙ltimo vag„o
+	sw t4,4(t1)    									# inicializando o tipo do vag√£o
+	sw zero, 8(t1) 									# novo vag√£o aponta para 0
+	sw t1, 8(t0)   									# colocando o endere√ßo do novo vag√£o(t2) no ponteiro do antigo √∫ltimo vag√£o
 
 	# Retornando do procedimento
 	jr ra
 	
 id_invalido_2:
 	addi a7, zero, 4
-	la a0, mens_id_repetido       		# caso o id j· exista na lista, relatamos o erro e lemos um novo id
+	la a0, mens_id_repetido       					# caso o id j√° exista na lista, relatamos o erro e lemos um novo id
 	ecall
 	
 	j ler_id_2
 	
 tipo_invalido_2:
-	addi a7,zero,4 				# caso o tipo do vag„o inserido seja inv·lido, avisamos e pedimos novamente que um tipo seja inserido, atÈ ser um tipo v·lido
+	addi a7,zero,4 									# caso o tipo do vag√£o inserido seja inv√°lido, avisamos e pedimos novamente que um tipo seja inserido, at√© ser um tipo v√°lido
 	la a0,mens_erro_tipo
 	ecall
 	
@@ -222,97 +222,97 @@ tipo_invalido_2:
 
 
 
-# FUNCIONALIDADE 3 -> Um ID È solicitado ao usu·rio e o vag„o com o ID inserido È removido do trem
+# FUNCIONALIDADE 3 -> Um ID √© solicitado ao usu√°rio e o vag√£o com o ID inserido √© removido do trem
 remover_vagao_id:
-	la t0, locomotiva 			# obtendo o endereÁo da locomotiva e colocando em t0
-ler_id_3:					# SolicitaÁ„o do id do vag„o
+	la t0, locomotiva 								# obtendo o endere√ßo da locomotiva e colocando em t0
+ler_id_3:											# Solicita√ß√£o do id do vag√£o
 	addi a7,zero,4
 	la a0,mens_id
 	ecall
 	addi a7,zero,5
 	ecall
 	mv t2, a0
-	beq t2,zero,primeiro_vagao 		# verificando se o vag„o a ser removido È a locomotiva (ID = 0). Caso seja, n„o pode ser removido
-	# inÌcio do loop para procurar o vag„o desejado
+	beq t2,zero,primeiro_vagao 						# verificando se o vag√£o a ser removido √© a locomotiva (ID = 0). Caso seja, n√£o pode ser removido
+	# in√≠cio do loop para procurar o vag√£o desejado
 encontrar_vagao:
-	lw t1, 8(t0)                     	# obtendo o endereÁo que o ponteiro do t0 apontava anteriormente e colocando em t1
-	beq t1,zero,vagao_nao_encontrado 	# se t1=0, chegamos ao fim do trem e o vag„o procurado n„o foi encontrado
-	lw t3, 0(t1)                     	# obtendo o ID do vag„o atual
-    	beq t3,t2,remocao                	# Se ID do vag„0 = ID buscado, prosseguimos com a remoÁ„o
-	mv t0, t1                        	# sen„o continua a percorrer
+	lw t1, 8(t0)                     				# obtendo o endere√ßo que o ponteiro do t0 apontava anteriormente e colocando em t1
+	beq t1,zero,vagao_nao_encontrado 				# se t1=0, chegamos ao fim do trem e o vag√£o procurado n√£o foi encontrado
+	lw t3, 0(t1)                     				# obtendo o ID do vag√£o atual
+    	beq t3,t2,remocao                			# Se ID do vag√£0 = ID buscado, prosseguimos com a remo√ß√£o
+	mv t0, t1                        				# sen√£o continua a percorrer
 	j encontrar_vagao
 	
 remocao:
-	lw t4, 8(t1)               		# obtendo o endereÁo que o ponteiro do t1 aponta e colocando em t4
-	sw t4, 8(t0)               		# o vag„o anterior aponta para o vag„o que o que est· sendo removido apontava (ou aponta para 0 caso o removido fosse o ˙ltimo vag„o)
-	sw zero, 8(t1)             		# o vag„o removido aponta para 0
+	lw t4, 8(t1)               						# obtendo o endere√ßo que o ponteiro do t1 aponta e colocando em t4
+	sw t4, 8(t0)               						# o vag√£o anterior aponta para o vag√£o que o que est√° sendo removido apontava (ou aponta para 0 caso o removido fosse o √∫ltimo vag√£o)
+	sw zero, 8(t1)             						# o vag√£o removido aponta para 0
 
 	# Retornando do procedimento
 	jr ra
 
-vagao_nao_encontrado:				# caso o ID a ser removido n„o exista no trem, avisamos o usu·rio
+vagao_nao_encontrado:								# caso o ID a ser removido n√£o exista no trem, avisamos o usu√°rio
 	addi a7, zero, 4        
     	la a0, mens_nao_encontrado 
     	ecall
 	
-	j ler_id_3  				# pedimos um novo ID ao usu·rio
+	j ler_id_3  									# pedimos um novo ID ao usu√°rio
 
 primeiro_vagao:
 	addi a7, zero, 4        
-    	la a0, mens_remocao_primeiro		# caso o ID a ser removido corresponda a locomotiva, avisamos e n„o permitimos
+    	la a0, mens_remocao_primeiro				# caso o ID a ser removido corresponda a locomotiva, avisamos e n√£o permitimos
     	ecall
     	
-    	j ler_id_3				# pedimos um novo id ao usu·rio
+    	j ler_id_3									# pedimos um novo id ao usu√°rio
 
 
 
-# FUNCIONALIDADE 4 -> Todos os vagıes do trem s„o impressos
+# FUNCIONALIDADE 4 -> Todos os vag√µes do trem s√£o impressos
 listar_trem:
-	la t0, locomotiva 			# pegando o endereÁo da locomotiva
-	# inÌcio do loop que percorre o trem, imprimindo os vagıes
+	la t0, locomotiva 								# pegando o endere√ßo da locomotiva
+	# in√≠cio do loop que percorre o trem, imprimindo os vag√µes
 percorrer_e_printar:
-	lw t1, 0(t0) 				# salvo o id do vag„o
+	lw t1, 0(t0) 									# salvo o id do vag√£o
 	addi a7, zero, 4
 	la, a0, mens_print_id
 	ecall
-	addi a7,zero,1 				# imprimo o ID do vag„o
+	addi a7,zero,1 									# imprimo o ID do vag√£o
 	mv a0, t1
 	ecall
 	addi a7, zero, 4
 	la, a0, mens_print_tipo
 	ecall
-	lw t1, 4(t0) 				# salvo o tipo do vag„o
-	addi a7,zero,1				# imprimo o tipo do vag√£o
+	lw t1, 4(t0) 									# salvo o tipo do vag√£o
+	addi a7,zero,1									# imprimo o tipo do vag√É¬£o
 	mv a0, t1
 	ecall
-	addi, a7, zero, 11 			# imprimo uma quebra de linha
-	li a0, 10 				# salvo o valor ASCII de \n no registrador 
+	addi, a7, zero, 11 								# imprimo uma quebra de linha
+	li a0, 10 										# salvo o valor ASCII de \n no registrador 
 	ecall
-	lw t0, 8(t0) 				# salvo o endere√ßo do prÛximo vag„o
-	bne t0 ,zero, percorrer_e_printar 	# se n„o for o fim do trem, eu repito o processo para o prÛximo vag„o
+	lw t0, 8(t0) 									# salvo o endere√É¬ßo do pr√≥ximo vag√£o
+	bne t0 ,zero, percorrer_e_printar 				# se n√£o for o fim do trem, eu repito o processo para o pr√≥ximo vag√£o
 
 	# Retornando do procedimento
 	jr ra
 	
 
 
-# FUNCIONALIDADE 5 -> Um ID È inserido pelo usu·rio e È feita a verificaÁ„o de se um vag„o com esse ID existe no trem ou n„o
+# FUNCIONALIDADE 5 -> Um ID √© inserido pelo usu√°rio e √© feita a verifica√ß√£o de se um vag√£o com esse ID existe no trem ou n√£o
 buscar_vagao:
-	addi a7,zero,4 				# È solicitado ao usu·rio que digite o ID a ser buscado
+	addi a7,zero,4 									# √© solicitado ao usu√°rio que digite o ID a ser buscado
 	la a0,mens_id
 	ecall
-	addi a7,zero,5				# leitura do input do usu·rio (ID do vag„o procurado)
+	addi a7,zero,5									# leitura do input do usu√°rio (ID do vag√£o procurado)
 	ecall
-	mv t0, a0 				# armazeno o ID a ser buscado em t0
-	la t1, locomotiva 			# pegando o endereÁo da locomotiva
-	# inÌcio do loop para percorrer o trem procurando pelo ID desejado
+	mv t0, a0 										# armazeno o ID a ser buscado em t0
+	la t1, locomotiva 								# pegando o endere√ßo da locomotiva
+	# in√≠cio do loop para percorrer o trem procurando pelo ID desejado
 percorrer_trem:
-	lw t2, 0(t1) 				# pego o id do vag„o
-	beq t2, t0, id_encontrado 		# se os IDs s„o correspondentes, saio do loop
-	lw t1, 8(t1) 				# caso n„o, passo pro prÛximo vag„o
-	bne t1, zero, percorrer_trem 		# enquanto n„o acabar o trem e o ID n„o for encontrado, continuo o loop
+	lw t2, 0(t1) 									# pego o id do vag√£o
+	beq t2, t0, id_encontrado 						# se os IDs s√£o correspondentes, saio do loop
+	lw t1, 8(t1) 									# caso n√£o, passo pro pr√≥ximo vag√£o
+	bne t1, zero, percorrer_trem 					# enquanto n√£o acabar o trem e o ID n√£o for encontrado, continuo o loop
 	addi a7, zero, 4
-	la a0, mens_nao_encontrado 		# nesse caso, chegamos no fim do trem e o ID n„o foi encontrado
+	la a0, mens_nao_encontrado 						# nesse caso, chegamos no fim do trem e o ID n√£o foi encontrado
 	ecall
 
 	# Retornando do procedimento
@@ -320,7 +320,7 @@ percorrer_trem:
 
 id_encontrado:
 	addi a7, zero, 4
-	la a0, mens_vagao_encontrado 		# o vag„o foi encontrado e relatamos isso ao usu·rio
+	la a0, mens_vagao_encontrado 					# o vag√£o foi encontrado e relatamos isso ao usu√°rio
 	ecall
 
 	#Retornando do procedimento
