@@ -285,7 +285,7 @@ percorrer_e_printar:
 	addi, a7, zero, 11 								# imprimo uma quebra de linha
 	li a0, 10 										# salvo o valor ASCII de \n no registrador 
 	ecall
-	lw t0, 8(t0) 									# salvo o endereÃ§o do próximo vagão
+	lw t0, 8(t0) 									# salvo o endereço do próximo vagão
 	bne t0 ,zero, percorrer_e_printar 				# se não for o fim do trem, eu repito o processo para o próximo vagão
 
 	# Retornando do procedimento
