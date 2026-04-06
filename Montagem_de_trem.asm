@@ -238,7 +238,7 @@ encontrar_vagao:
 	lw t1, 8(t0)                     				# obtendo o endereço que o ponteiro do t0 apontava anteriormente e colocando em t1
 	beq t1,zero,vagao_nao_encontrado 				# se t1=0, chegamos ao fim do trem e o vagão procurado não foi encontrado
 	lw t3, 0(t1)                     				# obtendo o ID do vagão atual
-    	beq t3,t2,remocao                			# Se ID do vagã0 = ID buscado, prosseguimos com a remoção
+    beq t3,t2,remocao          		      			# Se ID do vagã0 = ID buscado, prosseguimos com a remoção
 	mv t0, t1                        				# senão continua a percorrer
 	j encontrar_vagao
 	
@@ -252,17 +252,17 @@ remocao:
 
 vagao_nao_encontrado:								# caso o ID a ser removido não exista no trem, avisamos o usuário
 	addi a7, zero, 4        
-    	la a0, mens_nao_encontrado 
-    	ecall
+    la a0, mens_nao_encontrado 
+	ecall
 	
 	j ler_id_3  									# pedimos um novo ID ao usuário
 
 primeiro_vagao:
 	addi a7, zero, 4        
-    	la a0, mens_remocao_primeiro				# caso o ID a ser removido corresponda a locomotiva, avisamos e não permitimos
-    	ecall
+    la a0, mens_remocao_primeiro					# caso o ID a ser removido corresponda a locomotiva, avisamos e não permitimos
+    ecall
     	
-    	j ler_id_3									# pedimos um novo id ao usuário
+    j ler_id_3										# pedimos um novo id ao usuário
 
 
 
